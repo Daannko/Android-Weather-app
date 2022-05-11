@@ -23,7 +23,7 @@ public class MainPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main_page, container, false);
-        TextView sampleTextView = root.findViewById(R.id.SampleTextView);
+        TextView sampleTextView = root.findViewById(R.id.placeInfo);
         sampleTextView.setText(title);
         return root;
     }
