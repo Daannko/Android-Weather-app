@@ -1,3 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="tmp_size">50sp</dimen>
+    <dimen name="city_size">30sp</dimen>
+    <dimen name="temp_range_size">20sp</dimen>
+    <dimen name="desc_size">25sp</dimen>
+
 </resources>

@@ -17,15 +17,17 @@ import org.w3c.dom.Text;
 public class MainPage extends Fragment {
 
     String title;
-    Weather weather;
     TextView tmp;
     TextView city;
     TextView tmpRange;
     TextView tmpDesc;
     Context mContext;
 
-    public MainPage(Weather weather) {
-        this.weather = weather;
+
+    String test;
+
+    public MainPage() {
+
     }
 
     @Override
@@ -43,8 +45,16 @@ public class MainPage extends Fragment {
         tmpRange =  root.findViewById(R.id.tempFromToInfo);
         tmpDesc =  root.findViewById(R.id.tempDesInfo);
 
-        ((MainActivity)mContext).weather.getWeatherDetail(root);
-        tmp.setText(String.valueOf(((MainActivity)mContext).weather.tmp.get(0)));
+        ((MainActivity)mContext).weather.getWeatherDetail(root,new VolleyCallBack() {
+
+        @Override
+        public void onSuccess() {
+            // this is where you will call the geofire, here you have the response from the volley.
+            tmp.setText(String.valueOf(((MainActivity)mContext).weather.tmp.get(0))+"°");
+            city.setText(((MainActivity)mContext).weather.cityName);
+            tmpRange.setText("Od " + ((MainActivity)mContext).weather.minTmp.get(0)+"° do " + ((MainActivity)mContext).weather.maxTmp.get(0)+"°");
+            tmpDesc.setText(((MainActivity)mContext).weather.wDesc.get(0));
+        }});
 
         return root;
     }

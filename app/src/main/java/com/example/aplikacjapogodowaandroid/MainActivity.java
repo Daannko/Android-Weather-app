@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
         );
         viewPager2.setCurrentItem(1);
 
-        weather.getWeatherDetail(binding.getRoot());
-
+        weather.getWeatherDetail(binding.getRoot(),new VolleyCallBack() {
+            @Override
+            public void onSuccess() {}});
     }
 
 
@@ -73,18 +74,21 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new ChoseCity();
                 case 1:
-                    return new MainPage(new Weather());
+                    return new MainPage();
                 case 2:
                     return new SecondPage("druga strona");
                 case 3:
                     return new ThirdPage("trzecia strona");
             }
-            return new MainPage(null);
+            return new MainPage();
         }
+
 
         @Override
         public int getItemCount() {
             return 4;
         }
     }
+
+
 }
