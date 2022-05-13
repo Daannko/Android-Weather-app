@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        weather.getWeatherDetail(binding.getRoot());
+
 
         ViewPager2 viewPager2 = findViewById(R.id.ViewPager);
         viewPager2.setAdapter(
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         );
         viewPager2.setCurrentItem(1);
 
-
+        weather.getWeatherDetail(binding.getRoot());
 
     }
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new ChoseCity();
                 case 1:
-                    return new MainPage(weather);
+                    return new MainPage(new Weather());
                 case 2:
                     return new SecondPage("druga strona");
                 case 3:

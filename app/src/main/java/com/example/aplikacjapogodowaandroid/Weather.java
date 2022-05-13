@@ -25,7 +25,10 @@ public class Weather {
     private final String url = "http://api.openweathermap.org/data/2.5/forecast?q=";
     private final String appID = "135ed2b36525fa416686f568e19c22cd";
 
+    String city;
+    ArrayList<String> wDesc;
     ArrayList<Double> tmp;
+
 
 
 
@@ -48,14 +51,22 @@ public class Weather {
                 JSONArray list = null;
                 JSONObject object = null;
                 JSONObject main = null;
+                JSONObject hinterval = null;
+                JSONObject weather = null;
+
 
 
                 try {
-                    list = new JSONArray(response);
-                    for(int i = 0 ; i < 3 ; i++){
-                        object = list.getJSONObject(i*8);
-                        main = object.getJSONObject("main");
-                        tmp.add(main.getDouble("temp"));
+                    object = new JSONObject(response);
+                    list = object.getJSONArray("list");
+                    for(int i = 0 ; i <= 3 ; i++){
+                        hinterval = list.getJSONObject(i*8);
+                        main = hinterval.getJSONObject("main");
+                        weather = hinterval.getJSONObject("weather");
+                        Double dod = main.getDouble("temp");
+                        String desc = weather.getString("description");
+                        tmp.add(dod);
+                        wDesc.add(desc);
                     }
 
                 } catch (JSONException e) {

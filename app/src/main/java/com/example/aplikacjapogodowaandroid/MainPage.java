@@ -1,7 +1,9 @@
 package com.example.aplikacjapogodowaandroid;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,11 +22,17 @@ public class MainPage extends Fragment {
     TextView city;
     TextView tmpRange;
     TextView tmpDesc;
+    Context mContext;
 
     public MainPage(Weather weather) {
         this.weather = weather;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,9 +43,8 @@ public class MainPage extends Fragment {
         tmpRange =  root.findViewById(R.id.tempFromToInfo);
         tmpDesc =  root.findViewById(R.id.tempDesInfo);
 
-        weather.getWeatherDetail(getView());
-
-        tmp.setText(String.valueOf(weather.tmp.get(0)));
+        ((MainActivity)mContext).weather.getWeatherDetail(root);
+        tmp.setText(String.valueOf(((MainActivity)mContext).weather.tmp.get(0)));
 
         return root;
     }
