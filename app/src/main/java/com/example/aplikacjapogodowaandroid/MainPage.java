@@ -50,12 +50,17 @@ public class MainPage extends Fragment {
         @Override
         public void onSuccess() {
             // this is where you will call the geofire, here you have the response from the volley.
-            tmp.setText(String.valueOf(((MainActivity)mContext).weather.tmp.get(0))+"°");
-            city.setText(((MainActivity)mContext).weather.cityName);
-            tmpRange.setText("Od " + ((MainActivity)mContext).weather.minTmp.get(0)+"° do " + ((MainActivity)mContext).weather.maxTmp.get(0)+"°");
-            tmpDesc.setText(((MainActivity)mContext).weather.wDesc.get(0));
+            updateFragmentInfo();
         }});
 
         return root;
+    }
+
+    public void updateFragmentInfo()
+    {
+        tmp.setText(String.valueOf(((MainActivity)mContext).weather.tmp.get(0))+"°");
+        city.setText(((MainActivity)mContext).weather.cityName);
+        tmpRange.setText("Od " + ((MainActivity)mContext).weather.minTmp.get(0)+"° do " + ((MainActivity)mContext).weather.maxTmp.get(0)+"°");
+        tmpDesc.setText(((MainActivity)mContext).weather.wDesc.get(0));
     }
 }

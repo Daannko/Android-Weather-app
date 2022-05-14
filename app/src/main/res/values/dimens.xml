@@ -4,5 +4,6 @@
     <dimen name="city_size">30sp</dimen>
     <dimen name="temp_range_size">20sp</dimen>
     <dimen name="desc_size">25sp</dimen>
+    <dimen name="selected_city_size">20sp</dimen>
 
 </resources>

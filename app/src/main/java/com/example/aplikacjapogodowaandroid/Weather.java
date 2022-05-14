@@ -27,6 +27,7 @@ public class Weather {
     private final String url = "http://api.openweathermap.org/data/2.5/forecast?q=";
     private final String appID = "135ed2b36525fa416686f568e19c22cd";
 
+    String citySearch;
     String cityName;
     Double cityCordLat,cityCordLon;
     ArrayList<String> wDesc = new ArrayList<String>();
@@ -40,18 +41,15 @@ public class Weather {
 
     public  void getWeatherDetail(View view,final VolleyCallBack callBack){
         String tempUrl = "";
-        String city ="warsaw";
+
+        wDesc.clear();
+        tmp.clear();
+        maxTmp.clear();
+        minTmp.clear();
 
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
-
-        if (city.equals("")) {
-            System.out.println("Puste miasto");
-        }
-        else
-        {
-            tempUrl = url + city.toLowerCase() + "&appid="+ appID ;
-            System.out.println(tempUrl);
-        }
+        tempUrl = url + citySearch.toLowerCase() + "&appid="+ appID ;
+        System.out.println(tempUrl);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
             @Override

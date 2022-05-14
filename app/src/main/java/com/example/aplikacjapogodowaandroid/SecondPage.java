@@ -23,7 +23,7 @@ public class SecondPage extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_second_page, container, false);
         TextView sampleTextView = root.findViewById(R.id.TextViewSecoundFragment);
-        sampleTextView.setText(this.title);
+        sampleTextView.setText(String.valueOf(this.getId()));
         return root;
     }
 }
