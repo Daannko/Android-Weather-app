@@ -14,10 +14,6 @@ public class ThirdPage extends Fragment {
 
     String title;
 
-    public ThirdPage(String title) {
-        this.title = title;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,7 +21,6 @@ public class ThirdPage extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_third_page, container, false);
         TextView sampleTextView = root.findViewById(R.id.textViewSampleText);
-        sampleTextView.setText(this.title);
         return root;
     }
 }

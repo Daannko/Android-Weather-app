@@ -12,12 +12,6 @@ import android.widget.TextView;
 public class SecondPage extends Fragment {
 
 
-    String title;
-
-    public SecondPage(String title) {
-        this.title = title;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

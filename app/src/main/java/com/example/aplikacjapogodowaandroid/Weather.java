@@ -2,6 +2,8 @@ package com.example.aplikacjapogodowaandroid;
 
 import static java.lang.Math.round;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
@@ -29,11 +31,19 @@ public class Weather {
 
     String citySearch;
     String cityName;
+
     Double cityCordLat,cityCordLon;
+
+
+    ArrayList<String> icon = new ArrayList<String>();
+    ArrayList<String> date = new ArrayList<String>();
     ArrayList<String> wDesc = new ArrayList<String>();
     ArrayList<Double> tmp = new ArrayList<Double>();
     ArrayList<Double> maxTmp = new ArrayList<Double>();
     ArrayList<Double> minTmp = new ArrayList<Double>();
+    ArrayList<Integer> presure = new ArrayList<>();
+
+
 
 
 
@@ -42,12 +52,20 @@ public class Weather {
     public  void getWeatherDetail(View view,final VolleyCallBack callBack){
         String tempUrl = "";
 
+
+
         wDesc.clear();
         tmp.clear();
         maxTmp.clear();
         minTmp.clear();
 
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
+        if(citySearch == null)
+        {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+            citySearch = sharedPreferences.getString("CityName",null);
+        }
+
         tempUrl = url + citySearch.toLowerCase() + "&appid="+ appID ;
         System.out.println(tempUrl);
 
@@ -76,13 +94,18 @@ public class Weather {
 
                     for(int i = 0 ; i <= 3 ; i++){
                         hinterval = list.getJSONObject(i*8);
+
                         main = hinterval.getJSONObject("main");
                         weather = hinterval.getJSONArray("weather");
 
+                        date.add(hinterval.getString("dt_text"));
+
+                        presure.add(main.getInt("pressure"));
                         tmp.add(convertTmp(main.getDouble("temp")));
                         maxTmp.add(convertTmp(main.getDouble("temp_max")));
                         minTmp.add(convertTmp(main.getDouble("temp_min")));
                         wDesc.add( weather.getJSONObject(0).getString("description"));
+                        icon.add( weather.getJSONObject(0).getString("icon"));
 
                     }
                     callBack.onSuccess();

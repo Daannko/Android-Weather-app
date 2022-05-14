@@ -13,5 +13,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="calsius_sybmol">°</string>
+    <string name="add_city_button">\u25CF\u25CF\u25CF</string>
+    <string name="add_city_buttonv2">\u02DF</string>
+
 
 </resources>
