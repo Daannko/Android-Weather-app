@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
                 new SampleAdapter(this)
         );
         viewPager2.setCurrentItem(1);
+
         weather.citySearch = "Warszawa";
         weather.getWeatherDetail(binding.getRoot(),new VolleyCallBack() {
             @Override

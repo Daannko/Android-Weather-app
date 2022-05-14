@@ -56,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:focusedByDefault="true"
             android:text="" />
     </LinearLayout>
 
@@ -91,11 +92,11 @@
 
     <TextView
         android:id="@+id/selected_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/selected_city_size"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center"
         android:text=""
+        android:textSize="@dimen/selected_city_size"
         app:layout_constraintBottom_toTopOf="@+id/cityList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
