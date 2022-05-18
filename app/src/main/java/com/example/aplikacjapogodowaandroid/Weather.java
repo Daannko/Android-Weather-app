@@ -1,10 +1,10 @@
 package com.example.aplikacjapogodowaandroid;
 
-import static java.lang.Math.round;
+import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -16,12 +16,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.text.DecimalFormat;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Weather {
@@ -31,7 +36,7 @@ public class Weather {
 
     String citySearch;
     String cityName;
-
+    String tmpSwitch;
     Double cityCordLat,cityCordLon;
 
 
@@ -42,28 +47,155 @@ public class Weather {
     ArrayList<Double> maxTmp = new ArrayList<Double>();
     ArrayList<Double> minTmp = new ArrayList<Double>();
     ArrayList<Integer> presure = new ArrayList<>();
+    ArrayList<Integer> windForce = new ArrayList<>();
+    ArrayList<Integer> windDeg = new ArrayList<>();
+    ArrayList<Integer> humidity = new ArrayList<>();
+    ArrayList<Integer> visibility = new ArrayList<>();
+
+    SharedPreferences sharedPreferences;
+
+    public static void writeToFile(Context context, String city, String data) {
+        try {
+            city = StringUtils.stripAccents(city);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(city + ".txt", MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Toast.makeText(context,"Can't save file",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static String readFromFile(Context context, String city) {
+
+        city = StringUtils.stripAccents(city);
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(city + ".txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e);
+            return null;
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e);
+            return null;
+        }
+
+        return ret;
+    }
+
+    public void load(Context context, VolleyCallBack volleyCallBack){
 
 
+        if(citySearch == null)
+        {
+            citySearch = sharedPreferences.getString("CityName",null);
+            if(citySearch == null)
+            {
+                citySearch="Warsaw";
+            }
 
+        }
 
+        String response = readFromFile(context,citySearch);
 
-
-
-    public  void getWeatherDetail(View view,final VolleyCallBack callBack){
-        String tempUrl = "";
-
-
+        if(response == null)
+        {
+            return;
+        }
 
         wDesc.clear();
         tmp.clear();
         maxTmp.clear();
         minTmp.clear();
+        icon.clear();
+        date.clear();
+        presure.clear();
+        windForce.clear();
+        windDeg.clear();
+        humidity.clear();
+        visibility.clear();
+
+        JSONArray list = null;
+        JSONObject object = null;
+        JSONObject main = null;
+        JSONObject hinterval = null;
+        JSONArray weather = null;
+        JSONObject city = null;
+        JSONObject cord = null;
+        JSONObject wind = null;
+
+        try {
+            object = new JSONObject(response);
+            list = object.getJSONArray("list");
+            city = object.getJSONObject("city");
+            cord = city.getJSONObject("coord");
+
+            cityName = city.getString("name");
+            cityCordLat = cord.getDouble("lat");
+            cityCordLon = cord.getDouble("lon");
+
+
+            tmpSwitch = sharedPreferences.getString("Temperature",null);
+
+            for(int i = 0 ; i <= 3 ; i++){
+                hinterval = list.getJSONObject(i*8);
+
+                main = hinterval.getJSONObject("main");
+                weather = hinterval.getJSONArray("weather");
+                wind = hinterval.getJSONObject("wind");
+
+                date.add(hinterval.getString("dt_txt"));
+                humidity.add(main.getInt("humidity"));
+
+                visibility.add(hinterval.getInt("visibility"));
+                windForce.add(wind.getInt("speed"));
+                windDeg.add(wind.getInt("deg"));
+
+
+                presure.add(main.getInt("pressure"));
+                tmp.add(convertTmp(main.getDouble("temp")));
+                maxTmp.add(convertTmp(main.getDouble("temp_max")));
+                minTmp.add(convertTmp(main.getDouble("temp_min")));
+                wDesc.add( weather.getJSONObject(0).getString("description"));
+                icon.add( weather.getJSONObject(0).getString("icon"));
+
+            }
+            volleyCallBack.onSuccess();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void getWeatherDetail(View view,final VolleyCallBack callBack){
+        String tempUrl = "";
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         if(citySearch == null)
         {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
             citySearch = sharedPreferences.getString("CityName",null);
+            if(citySearch == null)
+            {
+                citySearch="Warsaw";
+            }
+
         }
 
         tempUrl = url + citySearch.toLowerCase() + "&appid="+ appID ;
@@ -72,48 +204,9 @@ public class Weather {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONArray list = null;
-                JSONObject object = null;
-                JSONObject main = null;
-                JSONObject hinterval = null;
-                JSONArray weather = null;
-                JSONObject city = null;
-                JSONObject cord = null;
 
-
-                try {
-                    object = new JSONObject(response);
-                    list = object.getJSONArray("list");
-                    city = object.getJSONObject("city");
-                    cord = city.getJSONObject("coord");
-
-                    cityName = city.getString("name");
-                    cityCordLat = cord.getDouble("lat");
-                    cityCordLon = cord.getDouble("lat");
-
-
-                    for(int i = 0 ; i <= 3 ; i++){
-                        hinterval = list.getJSONObject(i*8);
-
-                        main = hinterval.getJSONObject("main");
-                        weather = hinterval.getJSONArray("weather");
-
-                        date.add(hinterval.getString("dt_text"));
-
-                        presure.add(main.getInt("pressure"));
-                        tmp.add(convertTmp(main.getDouble("temp")));
-                        maxTmp.add(convertTmp(main.getDouble("temp_max")));
-                        minTmp.add(convertTmp(main.getDouble("temp_min")));
-                        wDesc.add( weather.getJSONObject(0).getString("description"));
-                        icon.add( weather.getJSONObject(0).getString("icon"));
-
-                    }
-                    callBack.onSuccess();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                writeToFile(view.getContext(), citySearch,response);
+                callBack.onSuccess();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -130,14 +223,14 @@ public class Weather {
     {
         int a = 0;
         Double output ;
-        switch (a)
+        switch (tmpSwitch)
         {
-            case 0://CEL
+            case "C"://CEL
                 output =  tmp - 273.15;
                 // zaaokrąglenie do 2 liczb po przecinku
                 output = Math.floor(output * 10) / 10;
                 break;
-            case 1://FARENHEIT
+            case "F"://FARENHEIT
                 output = (tmp - 273.15)*9/5 + 32;
                 output = Math.floor(output * 10) / 10;
                 break;

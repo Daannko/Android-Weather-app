@@ -29,7 +29,7 @@ public class MainPage extends Fragment {
     TextView preasure;
     TextView cord;
     TextView date;
-
+    ImageView iconView;
 
     Context mContext;
 
@@ -55,6 +55,10 @@ public class MainPage extends Fragment {
         tmp = binding.getRoot().findViewById(R.id.tempInfo);
         tmpRange =  binding.getRoot().findViewById(R.id.tempFromToInfo);
         tmpDesc =  binding.getRoot().findViewById(R.id.tempDesInfo);
+        iconView  = binding.getRoot().findViewById(R.id.icon);
+        preasure = binding.getRoot().findViewById(R.id.PreasureLabelInput);
+        date= binding.getRoot().findViewById(R.id.DateLabelInput);
+        cord= binding.getRoot().findViewById(R.id.CordsLabelInput);
 
     }
 
@@ -68,6 +72,10 @@ public class MainPage extends Fragment {
         tmp =  root.findViewById(R.id.tempInfo);
         tmpRange =  root.findViewById(R.id.tempFromToInfo);
         tmpDesc =  root.findViewById(R.id.tempDesInfo);
+        iconView  = root.findViewById(R.id.icon);
+        preasure = root.findViewById(R.id.PreasureLabelInput);
+        date= root.findViewById(R.id.DateLabelInput);
+        cord= root.findViewById(R.id.CordsLabelInput);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String cityName = sharedPref.getString("CityName",null);
@@ -78,22 +86,33 @@ public class MainPage extends Fragment {
             public void onSuccess() {
                 ((MainActivity)mContext).updateInfo(cityName);
             }});
-
+        updateFragmentInfo( ((MainActivity)mContext).weather);
 
         return root;
     }
 
     public void updateFragmentInfo(Weather weather)
     {
-/*        String imageURL = "http://openweathermap.org/img/wn/" + weather.icon + "@4x.png";
-        ImageView iconView = binding.getRoot().findViewById(R.id.icon);
-        Picasso.with(getContext()).load(imageURL).resize(500,0).into(iconView);*/
 
 
 
-        tmp.setText(String.valueOf(weather.tmp.get(0))+"°");
-        city.setText(weather.cityName);
-        tmpRange.setText("Od " + weather.minTmp.get(0)+"° do " + weather.maxTmp.get(0)+"°");
-        tmpDesc.setText(weather.wDesc.get(0));
+        weather.load(getContext(), new VolleyCallBack() {
+            @Override
+            public void onSuccess() {
+                String imageURL = "http://openweathermap.org/img/wn/" + weather.icon.get(0) + "@4x.png";
+                System.out.println(imageURL);
+                Picasso.with(getContext()).load(imageURL).into(iconView);
+                cord.setText(String.valueOf(weather.cityCordLat + ", "+weather.cityCordLon));
+                date.setText(String.valueOf(weather.date.get(0)));
+                preasure.setText(String.valueOf(weather.presure.get(0)+ " hPa"));
+                tmp.setText(String.valueOf(weather.tmp.get(0))+"°");
+                city.setText(weather.cityName);
+                tmpRange.setText("Od " + weather.minTmp.get(0)+"° do " + weather.maxTmp.get(0)+"°");
+                tmpDesc.setText(weather.wDesc.get(0));
+
+            }
+
+
+        });
     }
 }

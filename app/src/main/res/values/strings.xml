@@ -15,6 +15,10 @@
     <string name="calsius_sybmol">°</string>
     <string name="add_city_button">\u25CF\u25CF\u25CF</string>
     <string name="add_city_buttonv2">\u02DF</string>
+    <string name="cord_label_text">Koordynaty:</string>
+    <string name="presure_label_text">Ciśnienie:</string>
+    <string name="icon_label_text">Status:</string>
+    <string name="date_label_text">Data:</string>
 
 
 </resources>
