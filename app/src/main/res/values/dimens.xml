@@ -8,8 +8,9 @@
     <dimen name="add_city_button">20sp</dimen>
     <dimen name="detail_label">20sp</dimen>
     <dimen name="detail_input">20sp</dimen>
-    <dimen name="wind_label">20sp</dimen>
-    <dimen name="wind_input">30sp</dimen>
-    <dimen name="secound_page_input">20sp</dimen>
+    <dimen name="wind_label">30sp</dimen>
+    <dimen name="wind_input">40sp</dimen>
+    <dimen name="secound_page_input">40sp</dimen>
+    <dimen name="third_page_info">20sp</dimen>
 
 </resources>

@@ -100,7 +100,6 @@ public class MainPage extends Fragment {
             @Override
             public void onSuccess() {
                 String imageURL = "http://openweathermap.org/img/wn/" + weather.icon.get(0) + "@4x.png";
-                System.out.println(imageURL);
                 Picasso.with(getContext()).load(imageURL).into(iconView);
                 cord.setText(String.valueOf(weather.cityCordLat + ", "+weather.cityCordLon));
                 date.setText(String.valueOf(weather.date.get(0)));

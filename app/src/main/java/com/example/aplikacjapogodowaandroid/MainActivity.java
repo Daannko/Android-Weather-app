@@ -28,12 +28,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.aplikacjapogodowaandroid.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements ChoseCity.CityClicked {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     Weather weather = new Weather();
+    Integer position;
     ArrayList<Fragment> fragments = new ArrayList<>();
 
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         viewPager2.setAdapter(
                 new SampleAdapter(this)
         );
-
+        viewPager2.get
 
         Button refreshButton = (Button) binding.getRoot().findViewById(R.id.button2);
         refreshButton.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +152,23 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         ((SecondPage)fragments.get(1)).info = info;
         ((SecondPage)fragments.get(1)).updateFragmentInfo();
 
+        ((ThirdPage)fragments.get(2)).iconsString = weather.icon;
+        ((ThirdPage)fragments.get(2)).tempRangeMaxString = weather.maxTmp;
+        ((ThirdPage)fragments.get(2)).tempRangeMinString = weather.minTmp;
+        ((ThirdPage)fragments.get(2)).dateString = weather.date;
+        ((ThirdPage)fragments.get(2)).preasureString = weather.presure;
+        ((ThirdPage)fragments.get(2)).updateInfo();
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(binding.getRoot().getContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("Page",);
+        selectedCity = "Warsaw";
+        editor.apply();
+
+    }
 }

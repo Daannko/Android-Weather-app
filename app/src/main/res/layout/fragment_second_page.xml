@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline38"
@@ -110,9 +110,9 @@
         android:id="@+id/Hum"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textColor="@color/black"
-        android:text="Humidity:"
         android:gravity="center"
+        android:text="Humidity"
+        android:textColor="@color/black"
         android:textSize="@dimen/wind_label"
         app:layout_constraintBottom_toTopOf="@+id/guideline34"
         app:layout_constraintEnd_toStartOf="@+id/guideline37"
@@ -123,13 +123,13 @@
         android:id="@+id/HumInput"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textColor="@color/black"
         android:gravity="center"
+        android:textColor="@color/black"
         android:textSize="@dimen/secound_page_input"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline37"
-        app:layout_constraintTop_toBottomOf="@+id/WindSpeedInput" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline35"
+        app:layout_constraintEnd_toStartOf="@+id/guideline37"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline34" />
 
     <TextView
         android:id="@+id/VisibilityInput"
@@ -147,15 +147,15 @@
         android:id="@+id/Visibility"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Visibility:"
         android:gravity="center"
+        android:text="Visibility:"
         android:textColor="@color/black"
         android:textSize="@dimen/wind_label"
-        app:layout_constraintBottom_toTopOf="@+id/guideline35"
-        app:layout_constraintEnd_toStartOf="@+id/guideline37"
+        app:layout_constraintBottom_toTopOf="@+id/guideline34"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline34"
+        app:layout_constraintStart_toStartOf="@+id/guideline37"
+        app:layout_constraintTop_toTopOf="@+id/guideline33"
         app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

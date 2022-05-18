@@ -23,11 +23,12 @@ public class SecondPage extends Fragment {
 
     Context mcontext;
     MainActivity activity;
-    ArrayList<String> info;
+    ArrayList<String> info ;
     TextView windSpeed;
     TextView windDeg;
     TextView humidity;
     TextView visibility;
+    String city;
 
 
     @Override
@@ -40,14 +41,22 @@ public class SecondPage extends Fragment {
         humidity = root.findViewById(R.id.HumInput);
         visibility = root.findViewById(R.id.VisibilityInput);
 
+        info = new ArrayList<>();
+
+
         activity = (MainActivity) getActivity();
+        activity.updateInfo(null);
         activity.weather.load(getContext(), new VolleyCallBack() {
             @Override
             public void onSuccess() {
-                windDeg.setText( info.get(0));
-                windSpeed.setText( info.get(1));
-                humidity.setText( info.get(2));
-                visibility.setText( info.get(3));
+                if(windDeg != null && info.size() != 0)
+                {
+                    windDeg.setText( info.get(0));
+                    windSpeed.setText( info.get(1));
+                    humidity.setText( info.get(2));
+                    visibility.setText( info.get(3));
+                }
+
             }
         });
         return root;

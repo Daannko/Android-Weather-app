@@ -180,8 +180,6 @@ public class ChoseCity extends Fragment {
                 editor.apply();
 
 
-
-
                 arrayAdapter.notifyDataSetChanged();
                 mCallback.updateInfo(selectedCity);
 
@@ -198,27 +196,32 @@ public class ChoseCity extends Fragment {
            public void onClick(View v) {
 
                TextView cityName = (TextView) root.findViewById(R.id.cityInput);
-               if(cityName.getText().toString().length()<2) {
-                   Toast.makeText(getContext(),"This city is already in your list.",Toast.LENGTH_SHORT).show();
-               }
-               else if(cities.contains(cityName.getText().toString()))
+
+               if(cities.contains(cityName.getText().toString()))
                {
                    Toast.makeText(getContext(),"This city is already in your list.",Toast.LENGTH_SHORT).show();
                }
                else
                {
-                   cities.add(cityName.getText().toString());
+                   ((MainActivity)mContext).weather.askCity(getView(), cityName.getText().toString() ,new VolleyCallBack() {
+                       @Override
+                       public void onSuccess() {
+                           cities.add(cityName.getText().toString());
 
-                   SharedPreferences.Editor editor = sharedPref.edit();
-                   String list = gson.toJson(cities);
-                   editor.putString("CityList",list);
-                   editor.apply();
+                           SharedPreferences.Editor editor = sharedPref.edit();
+                           String list = gson.toJson(cities);
+                           editor.putString("CityList",list);
+                           editor.apply();
 
-                   setCity(cities.size()-1);
-                   selectedCityTextView.setText("Wybrane miasto: "+selectedCity);
-                   arrayAdapter.notifyDataSetChanged();
+                           setCity(cities.size()-1);
+                           selectedCityTextView.setText("Wybrane miasto: "+selectedCity);
+                           arrayAdapter.notifyDataSetChanged();
 
-                   mCallback.updateInfo(selectedCity);
+                           mCallback.updateInfo(selectedCity);
+                       }
+                   });
+
+
                }
 
            }

@@ -71,6 +71,7 @@ public class Weather {
         city = StringUtils.stripAccents(city);
         String ret = "";
 
+
         try {
             InputStream inputStream = context.openFileInput(city + ".txt");
 
@@ -112,7 +113,13 @@ public class Weather {
 
         }
 
-        String response = readFromFile(context,citySearch);
+
+        String response = null;
+        if(context != null)
+        {
+            response= readFromFile(context,citySearch);
+        }
+
 
         if(response == null)
         {
@@ -151,9 +158,9 @@ public class Weather {
             cityCordLon = cord.getDouble("lon");
 
 
-            tmpSwitch = sharedPreferences.getString("Temperature",null);
 
-            for(int i = 0 ; i <= 3 ; i++){
+
+            for(int i = 0 ; i <= 4 ; i++){
                 hinterval = list.getJSONObject(i*8);
 
                 main = hinterval.getJSONObject("main");
@@ -169,9 +176,9 @@ public class Weather {
 
 
                 presure.add(main.getInt("pressure"));
-                tmp.add(convertTmp(main.getDouble("temp")));
-                maxTmp.add(convertTmp(main.getDouble("temp_max")));
-                minTmp.add(convertTmp(main.getDouble("temp_min")));
+                tmp.add(convertTmp(main.getDouble("temp"),context));
+                maxTmp.add(convertTmp(main.getDouble("temp_max"),context));
+                minTmp.add(convertTmp(main.getDouble("temp_min"),context));
                 wDesc.add( weather.getJSONObject(0).getString("description"));
                 icon.add( weather.getJSONObject(0).getString("icon"));
 
@@ -185,8 +192,6 @@ public class Weather {
 
     public  void getWeatherDetail(View view,final VolleyCallBack callBack){
         String tempUrl = "";
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         if(citySearch == null)
         {
@@ -211,7 +216,7 @@ public class Weather {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(view.getContext(),error.toString().trim(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(),"Can't find city.",Toast.LENGTH_SHORT).show();
                 Log.d("error",error.toString());
             }
         });
@@ -219,10 +224,20 @@ public class Weather {
         requestQueue.add(stringRequest);
     }
 
-    public Double convertTmp(Double tmp)
+    public Double convertTmp(Double tmp, Context context)
     {
         int a = 0;
         Double output ;
+        if(tmpSwitch == null)
+        {
+            sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context);
+            tmpSwitch = sharedPreferences.getString("Temperature",null);
+            if(tmpSwitch == null)
+            {
+                tmpSwitch="C";
+            }
+        }
+
         switch (tmpSwitch)
         {
             case "C"://CEL
@@ -240,6 +255,27 @@ public class Weather {
                 break;
         }
         return output;
+    }
+
+    public  void askCity(View view,String cityName,final VolleyCallBack callBack){
+        String tempUrl = "";
+        RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
+
+        tempUrl = url + cityName.toLowerCase() + "&appid="+ appID ;
+        System.out.println(tempUrl);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callBack.onSuccess();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(view.getContext(),"Can't find city.",Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(stringRequest);
     }
 
 }
