@@ -1,11 +1,13 @@
 package com.example.aplikacjapogodowaandroid;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class ThirdPage extends Fragment {
     ArrayList<Double> tempRangeMaxString = new ArrayList<>();
     ArrayList<Double> tempRangeMinString = new ArrayList<>();
     ArrayList<Integer> preasureString = new ArrayList<>();
+    String city;
 
 
     @Override
@@ -98,41 +101,14 @@ public class ThirdPage extends Fragment {
 
 
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        city = sharedPref.getString("CityName",null);
 
         activity = (MainActivity) getActivity();
-        activity.weather.load(getContext(), new VolleyCallBack() {
-            @Override
-            public void onSuccess() {
-                if(dateName != null) {
-
-                    for(int i = 0 , j = 1 ; j < tempRangeMinString.size() && i < dateName.size() ; i++,j++)
-                    {
-                        String imageURL = "http://openweathermap.org/img/wn/" + iconsString.get(j) + "@4x.png";
-                        Picasso.with(getContext()).load(imageURL).into(icons.get(i));
-
-                        SimpleDateFormat fullDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-                        Date day = null;
-                        try {
-                            day = fullDate.parse(dateString.get(j).toString());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                        SimpleDateFormat dayDate = new SimpleDateFormat("E");
-
-                        String dayString = simpleDateFormat.format(day);
-                        String dayNameString= dayDate.format(day);
-
-                        tempRange.get(i).setText("Od " + tempRangeMinString.get(j)+"° do " + tempRangeMaxString.get(j)+"°");
-                        dateName.get(i).setText(dayToDzien(dayNameString));
-                        date.get(i).setText(dayString);
-                        preasure.get(i).setText(preasureString.get(j).toString()  + "hPa" );
-                    }
-                }
-            }
-        });
+        if(activity.weather!= null)
+        {
+            readData(activity.weather);
+        }
 
         return root;
     }
@@ -158,6 +134,16 @@ public class ThirdPage extends Fragment {
 
         }
         return s;
+    }
+
+    public void readData(Weather weather)
+    {
+        iconsString = weather.icon;
+        tempRangeMaxString = weather.maxTmp;
+        tempRangeMinString = weather.minTmp;
+        dateString = weather.date;
+        preasureString = weather.presure;
+        updateInfo();
     }
 
     public void updateInfo()

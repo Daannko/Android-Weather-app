@@ -27,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.aplikacjapogodowaandroid.databinding.ActivityMainBinding;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,18 +57,24 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         viewPager2.setAdapter(
                 new SampleAdapter(this)
         );
-        viewPager2.get
+
+        weather.getWeatherDetail(binding.getRoot().getRootView(), new VolleyCallBack() {
+            @Override
+            public void onSuccess() {
+
+            }
+        });
+        weather.load(binding.getRoot().getContext(), new VolleyCallBack() {
+            @Override
+            public void onSuccess() {
+
+            }
+        });
 
         Button refreshButton = (Button) binding.getRoot().findViewById(R.id.button2);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                weather.getWeatherDetail(binding.getRoot(), new VolleyCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        updateInfo(((ChoseCity)fragments.get(3)).selectedCity);
-                    }
-                });
                 updateInfo(((ChoseCity)fragments.get(3)).selectedCity);
             }
         });
@@ -76,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
                 if (viewPager2.getVisibility() == View.GONE) {
                     refreshButton.setVisibility(View.VISIBLE);
@@ -92,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
                     viewPager2.setVisibility(View.GONE);
                     getSupportFragmentManager().beginTransaction().replace(R.id.Frame, fragments.get(3)).commit();
                 }
-
-
             }
         });
 
@@ -137,38 +140,33 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         weather.getWeatherDetail(binding.getRoot().getRootView(),new VolleyCallBack() {
             @Override
             public void onSuccess() {
-                MainPage tmp  = (MainPage)fragments.get(0);
-                tmp.updateFragmentInfo(weather);
+
             }});
 
-        MainPage tmp  = (MainPage)fragments.get(0);
-        tmp.updateFragmentInfo(weather);
+        weather.load(binding.getRoot().getContext(), new VolleyCallBack() {
+            @Override
+            public void onSuccess() {
 
-        ArrayList<String> info= new ArrayList<>();
-        info.add(weather.windForce.get(0).toString());
-        info.add(weather.windDeg.get(0).toString());
-        info.add(weather.humidity.get(0).toString());
-        info.add(weather.visibility.get(0).toString());
-        ((SecondPage)fragments.get(1)).info = info;
-        ((SecondPage)fragments.get(1)).updateFragmentInfo();
+                MainPage tmp  = (MainPage)fragments.get(0);
+                tmp.readData(weather);
 
-        ((ThirdPage)fragments.get(2)).iconsString = weather.icon;
-        ((ThirdPage)fragments.get(2)).tempRangeMaxString = weather.maxTmp;
-        ((ThirdPage)fragments.get(2)).tempRangeMinString = weather.minTmp;
-        ((ThirdPage)fragments.get(2)).dateString = weather.date;
-        ((ThirdPage)fragments.get(2)).preasureString = weather.presure;
-        ((ThirdPage)fragments.get(2)).updateInfo();
+                ArrayList<String> info= new ArrayList<>();
+                info.add(weather.windForce.get(0).toString());
+                info.add(weather.windDeg.get(0).toString());
+                info.add(weather.humidity.get(0).toString());
+                info.add(weather.visibility.get(0).toString());
+                ((SecondPage)fragments.get(1)).info = info;
+                ((SecondPage)fragments.get(1)).updateFragmentInfo();
 
-    }
+                ((ThirdPage)fragments.get(2)).iconsString = weather.icon;
+                ((ThirdPage)fragments.get(2)).tempRangeMaxString = weather.maxTmp;
+                ((ThirdPage)fragments.get(2)).tempRangeMinString = weather.minTmp;
+                ((ThirdPage)fragments.get(2)).dateString = weather.date;
+                ((ThirdPage)fragments.get(2)).preasureString = weather.presure;
+                ((ThirdPage)fragments.get(2)).updateInfo();
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(binding.getRoot().getContext());
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Page",);
-        selectedCity = "Warsaw";
-        editor.apply();
+            }
+        });
 
     }
 }

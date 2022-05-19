@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -66,11 +68,10 @@ public class Weather {
         }
     }
 
-    public static String readFromFile(Context context, String city) {
+    public static String readFromFile(@NonNull Context context, String city) {
 
         city = StringUtils.stripAccents(city);
         String ret = "";
-
 
         try {
             InputStream inputStream = context.openFileInput(city + ".txt");
@@ -105,6 +106,8 @@ public class Weather {
 
         if(citySearch == null)
         {
+
+            sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context);
             citySearch = sharedPreferences.getString("CityName",null);
             if(citySearch == null)
             {
@@ -119,6 +122,7 @@ public class Weather {
         {
             response= readFromFile(context,citySearch);
         }
+
 
 
         if(response == null)
@@ -195,6 +199,7 @@ public class Weather {
         RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
         if(citySearch == null)
         {
+            sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(view.getContext());
             citySearch = sharedPreferences.getString("CityName",null);
             if(citySearch == null)
             {
@@ -228,6 +233,7 @@ public class Weather {
     {
         int a = 0;
         Double output ;
+
         if(tmpSwitch == null)
         {
             sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context);

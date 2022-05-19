@@ -80,38 +80,27 @@ public class MainPage extends Fragment {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String cityName = sharedPref.getString("CityName",null);
 
-        ((MainActivity)mContext).weather.citySearch=cityName;
-        ((MainActivity)mContext).weather.getWeatherDetail(binding.getRoot().getRootView(),new VolleyCallBack() {
-            @Override
-            public void onSuccess() {
-                ((MainActivity)mContext).updateInfo(cityName);
-            }});
-        updateFragmentInfo( ((MainActivity)mContext).weather);
+        if(((MainActivity)mContext).weather.icon != null){
+            readData(((MainActivity) mContext).weather);
+        }
 
         return root;
     }
 
-    public void updateFragmentInfo(Weather weather)
+    public void readData(Weather weather)
     {
+        if(weather.icon.size() != 0 && cord != null)
+        {
+            String imageURL = "http://openweathermap.org/img/wn/" + weather.icon.get(0) + "@4x.png";
+            Picasso.with(getContext()).load(imageURL).into(iconView);
+            cord.setText(String.valueOf(weather.cityCordLat + ", "+weather.cityCordLon));
+            date.setText(String.valueOf(weather.date.get(0)));
+            preasure.setText(String.valueOf(weather.presure.get(0)+ " hPa"));
+            tmp.setText(String.valueOf(weather.tmp.get(0))+"°");
+            city.setText(weather.cityName);
+            tmpRange.setText("Od " + weather.minTmp.get(0)+"° do " + weather.maxTmp.get(0)+"°");
+            tmpDesc.setText(weather.wDesc.get(0));
+        }
 
-
-
-        weather.load(getContext(), new VolleyCallBack() {
-            @Override
-            public void onSuccess() {
-                String imageURL = "http://openweathermap.org/img/wn/" + weather.icon.get(0) + "@4x.png";
-                Picasso.with(getContext()).load(imageURL).into(iconView);
-                cord.setText(String.valueOf(weather.cityCordLat + ", "+weather.cityCordLon));
-                date.setText(String.valueOf(weather.date.get(0)));
-                preasure.setText(String.valueOf(weather.presure.get(0)+ " hPa"));
-                tmp.setText(String.valueOf(weather.tmp.get(0))+"°");
-                city.setText(weather.cityName);
-                tmpRange.setText("Od " + weather.minTmp.get(0)+"° do " + weather.maxTmp.get(0)+"°");
-                tmpDesc.setText(weather.wDesc.get(0));
-
-            }
-
-
-        });
     }
 }

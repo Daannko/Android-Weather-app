@@ -130,6 +130,7 @@ public class ChoseCity extends Fragment {
                     Toast.makeText(getContext(),"Wyświetlana temperatura będzie w fahrenheitach",Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("Temperature","F");
+                    ((MainActivity)mContext).weather.tmpSwitch = "F";
                     editor.apply();
                 }
                 else{
@@ -138,8 +139,10 @@ public class ChoseCity extends Fragment {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("Temperature","C");
                     editor.apply();
+                    ((MainActivity)mContext).weather.tmpSwitch = "C";
 
                 }
+
                 mCallback.updateInfo(selectedCity);
             }
         });
@@ -186,11 +189,7 @@ public class ChoseCity extends Fragment {
                 return true;
             }
         });
-
-        Button btn = new Button(((MainActivity)mContext));
-        btn.setText("X");
-        btn.setTextColor(getResources().getColor(R.color.black));
-
+        ///////////////// DODAWANIE MIASTA
        addButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
