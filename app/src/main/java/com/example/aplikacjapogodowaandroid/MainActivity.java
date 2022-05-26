@@ -140,33 +140,30 @@ public class MainActivity extends AppCompatActivity implements ChoseCity.CityCli
         weather.getWeatherDetail(binding.getRoot().getRootView(),new VolleyCallBack() {
             @Override
             public void onSuccess() {
+                weather.load(binding.getRoot().getContext(), new VolleyCallBack() {
+                    @Override
+                    public void onSuccess() {
 
+                        MainPage tmp  = (MainPage)fragments.get(0);
+                        tmp.readData(weather);
+
+                        ArrayList<String> info= new ArrayList<>();
+                        info.add(weather.windForce.get(0).toString());
+                        info.add(weather.windDeg.get(0).toString());
+                        info.add(weather.humidity.get(0).toString());
+                        info.add(weather.visibility.get(0).toString());
+                        ((SecondPage)fragments.get(1)).info = info;
+                        ((SecondPage)fragments.get(1)).updateFragmentInfo();
+
+                        ((ThirdPage)fragments.get(2)).iconsString = weather.icon;
+                        ((ThirdPage)fragments.get(2)).tempRangeMaxString = weather.maxTmp;
+                        ((ThirdPage)fragments.get(2)).tempRangeMinString = weather.minTmp;
+                        ((ThirdPage)fragments.get(2)).dateString = weather.date;
+                        ((ThirdPage)fragments.get(2)).preasureString = weather.presure;
+                        ((ThirdPage)fragments.get(2)).updateInfo();
+
+                    }
+                });
             }});
-
-        weather.load(binding.getRoot().getContext(), new VolleyCallBack() {
-            @Override
-            public void onSuccess() {
-
-                MainPage tmp  = (MainPage)fragments.get(0);
-                tmp.readData(weather);
-
-                ArrayList<String> info= new ArrayList<>();
-                info.add(weather.windForce.get(0).toString());
-                info.add(weather.windDeg.get(0).toString());
-                info.add(weather.humidity.get(0).toString());
-                info.add(weather.visibility.get(0).toString());
-                ((SecondPage)fragments.get(1)).info = info;
-                ((SecondPage)fragments.get(1)).updateFragmentInfo();
-
-                ((ThirdPage)fragments.get(2)).iconsString = weather.icon;
-                ((ThirdPage)fragments.get(2)).tempRangeMaxString = weather.maxTmp;
-                ((ThirdPage)fragments.get(2)).tempRangeMinString = weather.minTmp;
-                ((ThirdPage)fragments.get(2)).dateString = weather.date;
-                ((ThirdPage)fragments.get(2)).preasureString = weather.presure;
-                ((ThirdPage)fragments.get(2)).updateInfo();
-
-            }
-        });
-
     }
 }
